@@ -9,7 +9,7 @@
 #SBATCH --mail-user=rn2214@nyu.edu
 #SBATCH --account=pr_230_general
 
-CONFIG_PATH=/scratch/rn2214/source-separation/SCNet/conf/config.yaml
+CONFIG_PATH=/scratch/rn2214/source-separation/SCNet/conf/config_small.yaml
 SAVE_PATH=/scratch/rn2214/source-separation/SCNet/ckpt/
 
 ../sing << EOF
