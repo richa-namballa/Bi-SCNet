@@ -100,6 +100,8 @@ class Solver(object):
             for kind, emas in self.emas.items():
                 for k, ema in enumerate(emas):
                     ema.load_state_dict(package[f'ema_{kind}_{k}'])
+            logger.info(f'Model checkpoint loaded successfully.')
+            logger.info(f'Resuming training from epoch {self.epoch + 1}...')
 
     def _format_train(self, metrics: dict) -> dict:
         """Formatting for train/valid metrics."""
