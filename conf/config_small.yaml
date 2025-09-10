@@ -36,12 +36,11 @@ model:
   num_dplayer: 6
   expand: 1
 
-epochs: 80
+epochs: 200
 batch_size: 4
 
 optim:
-  lr: 0.0003923583618673999 
-  # lr: 0.0005
+  lr: 0.0005
   decay_rate: 0.98
   decay_step: 10
   momentum: 0.9
@@ -50,7 +49,7 @@ optim:
   weight_decay: 0
 
 seed: 42
-save_every: 10
+save_every: 2000
 
 augment:
   shift_same: false
@@ -58,10 +57,10 @@ augment:
     proba: 1
     group_size: 4
   scale:
-    proba: 1
+    proba: 0
     min: 0.25
     max: 1.25
-  flip: true
+  flip: false
 
 misc:
-  num_workers: 4
+  num_workers: 6
