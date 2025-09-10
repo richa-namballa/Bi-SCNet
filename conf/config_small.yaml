@@ -1,6 +1,7 @@
+name: 'binaural_scnet_small'
 
 data:
-  wav: /root/autodl-tmp/musdbhq
+  wav: /scratch/rn2214/source-separation/data/binaural_musdb18/split
   samplerate: 44100
   segment: 11
   shift: 1
@@ -35,11 +36,12 @@ model:
   num_dplayer: 6
   expand: 1
 
-epochs: 200
+epochs: 80
 batch_size: 4
 
 optim:
-  lr: 0.0005
+  lr: 0.0003923583618673999 
+  # lr: 0.0005
   decay_rate: 0.98
   decay_step: 10
   momentum: 0.9
@@ -48,7 +50,7 @@ optim:
   weight_decay: 0
 
 seed: 42
-save_every:
+save_every: 10
 
 augment:
   shift_same: false
@@ -62,18 +64,4 @@ augment:
   flip: true
 
 misc:
-  num_workers: 10
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  num_workers: 4
