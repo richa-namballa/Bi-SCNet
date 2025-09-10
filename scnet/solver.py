@@ -4,7 +4,7 @@ from .utils import copy_state, EMA, new_sdr
 from .apply import apply_model
 from .ema import ModelEMA
 from . import augment
-from .loss import spec_rmse_loss
+from .loss import BinauralLoss
 from tqdm import tqdm
 from .log import logger
 from accelerate import Accelerator
@@ -117,6 +117,9 @@ class Solver(object):
         return losses
 
     def train(self):
+        # Initialize custom binaural loss
+        self.binaural_loss = BinauralLoss(self.stft_config)
+
         # Optimizing the model
         for epoch in range(self.epoch + 1, self.config.epochs):
             #Adjust learning rate
@@ -213,7 +216,7 @@ class Solver(object):
 
             assert estimate.shape == sources.shape, (estimate.shape, sources.shape)
 
-            loss = spec_rmse_loss(estimate, sources, self.stft_config)
+            loss = self.binaural_loss(estimate, sources)
 
             losses = {}
 
