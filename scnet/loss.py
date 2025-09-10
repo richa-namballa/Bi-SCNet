@@ -159,6 +159,10 @@ class BinauralLoss(nn.Module):
         self.rmse_weight = rmse_weight
         self.itd_weight = itd_weight
 
+        # store separate loss values for logging
+        self.signal_loss = 1e6
+        self.spatial_loss = 1e6
+
     def forward(self, estimates, targets):
         """
         Multi-task loss meant for binaural audio signal separation which
@@ -175,9 +179,11 @@ class BinauralLoss(nn.Module):
         loss = 0
 
         if self.rmse_weight > 0:
-            loss += spec_rmse_loss(estimates, targets, self.stft_config)
+            self.signal_loss = spec_rmse_loss(estimates, targets, self.stft_config)
+            loss += self.signal_loss
 
         if self.itd_weight > 0:
-            loss += itd_loss(estimates, targets)
+            self.spatial_loss = itd_loss(estimates, targets)
+            loss += self.spatial_loss
 
         return loss

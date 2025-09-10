@@ -150,7 +150,10 @@ class Solver(object):
             formatted = self._format_train(metrics['train'])
             logger.info(
                 f'Train Summary | Epoch {epoch + 1} | {_summary(formatted)}')
-            self.accelerator.log({'epoch': (epoch + 1), 'train_loss': metrics['train']['loss']}, step=(epoch + 1))
+            self.accelerator.log({'epoch': (epoch + 1),
+                'train_loss': metrics['train']['loss'],
+                'train_sig_loss': metrics['train']['signal_loss'],
+                'train_spat_loss': metrics['train']['spatial_loss']}, step=(epoch + 1))
 
             if 'nsdr' in metrics['train']:
                 self.accelerator.log({'train_nsdr': metrics['train']['nsdr']}, step=(epoch + 1))
@@ -185,7 +188,9 @@ class Solver(object):
             logger.info(
                 f'Valid Summary | Epoch {epoch + 1} | {_summary(formatted)}')
             self.accelerator.log({'valid_loss': metrics['valid']['loss'],
-                         'valid_nsdr': metrics['valid']['nsdr']}, step=(epoch + 1))
+                'valid_sig_loss': metrics['valid']['signal_loss'],
+                'valid_spat_loss': metrics['valid']['spatial_loss']
+                'valid_nsdr': metrics['valid']['nsdr']}, step=(epoch + 1))
             
             valid_nsdr = metrics['valid']['nsdr']
             # Save the best model
@@ -240,6 +245,9 @@ class Solver(object):
             losses = {}
 
             losses['loss'] = loss
+            losses['signal_loss'] = self.binaural_loss.signal_loss
+            losses['spatial_loss'] = self.binaural_loss.spatial_loss
+
             if not train:
                 nsdrs = new_sdr(sources, estimate.detach()).mean(0)
                 nsdrs = self.accelerator.reduce(nsdrs, reduction="mean")
