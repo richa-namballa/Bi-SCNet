@@ -91,8 +91,8 @@ def gcc_phat_cc(x1, x2, tau_max=None, eps=1e-6):
     # compute FFT along time dimension (real-valued)
     X1 = torch.fft.rfft(x1, n=N, dim=-1)
     X2 = torch.fft.rfft(x2, n=N, dim=-1)
-    R = X1 * torch.conj(X2)
-    R /= (torch.abs(R) + eps)  # avoid zero division
+    numerator = X1 * torch.conj(X2)
+    R = numerator / (torch.abs(numerator) + eps)  # avoid zero division
 
     cc = torch.fft.irfft(R, n=N)  # (batch, nsrc, 1, N)
     cc = torch.fft.fftshift(cc, dim=-1)  # shift so 0 sample lag is in middle
