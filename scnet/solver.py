@@ -191,7 +191,7 @@ class Solver(object):
                 f'Valid Summary | Epoch {epoch + 1} | {_summary(formatted)}')
             self.accelerator.log({'valid_loss': metrics['valid']['loss'],
                 'valid_sig_loss': metrics['valid']['signal_loss'],
-                'valid_spat_loss': metrics['valid']['spatial_loss']
+                'valid_spat_loss': metrics['valid']['spatial_loss'],
                 'valid_nsdr': metrics['valid']['nsdr']}, step=(epoch + 1))
             
             valid_nsdr = metrics['valid']['nsdr']
