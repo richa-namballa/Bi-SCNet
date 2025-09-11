@@ -68,9 +68,9 @@ def gcc_phat_cc(x1, x2, tau_max=None, eps=1e-6):
     Parameters
     ----------
     x1 : torch.Tensor
-        Left channel (batch, nsrc, 1, samples)
+        Left channel (batch, nsrc, samples)
     x2 : torch.Tensor
-        Right channel (batch, nsrc, 1, samples)
+        Right channel (batch, nsrc, samples)
     tau_max : int
         Maximum lag value
     eps : float
@@ -80,10 +80,10 @@ def gcc_phat_cc(x1, x2, tau_max=None, eps=1e-6):
     -------
     torch.Tensor
         Cross correlation coefficients
-        (batch, nsrc, 1, 2T + 1)
+        (batch, nsrc, 2T + 1)
     """
-    # (batch, nsrc, 1, samples)
-    B, S, C, T = x1.shape
+    # (batch, nsrc, samples)
+    B, S, T = x1.shape
 
     # zero-pad to account for negative lag
     N = 2 * T
@@ -122,8 +122,7 @@ def itd_loss(pred, target):
         Scalar loss value.
     """
     # check for two channels
-    assert pred.shape[2] == 2 and target.shape[2] == 2 \
-        "Inputs must be binaural (batch, nsrc, 2, time)."
+    assert pred.shape[2] == 2 and target.shape[2] == 2
     
     # compute cross correlation using GCC-PHAT between left and
     # right channels of predicted and estimated signals
