@@ -158,7 +158,7 @@ class BinauralLoss(nn.Module):
     itd_weight : float
         Weight of spatial loss in loss summation
     """
-    def __init__(self, stft_config, sr=44100, max_lag=1e-3, rmse_weight=1, itd_weight=1e6):
+    def __init__(self, stft_config, sr=44100, max_lag=1e-3, rmse_weight=1, itd_weight=1):
         super(BinauralLoss, self).__init__()
 
         self.stft_config = stft_config
