@@ -74,7 +74,7 @@ def gcc_phat_cc(x1, x2, tau_max, eps=1e-6):
     tau_max : int
         Maximum lag value in samples
     eps : float
-        Epsilon to avoid zero division
+        Epsilon to avoid zero division (default: 1e-6)
 
     Returns
     -------
@@ -115,6 +115,8 @@ def itd_loss(pred, target, tau_max):
         Estimated signals of shape (batch, nsrc, channels, time)
     target : torch.Tensor
         Reference signals of shape (batch, nsrc, channels, time)
+    tau_max : int
+        Maximum lag value in samples
 
     Returns
     -------
@@ -146,6 +148,11 @@ class BinauralLoss(nn.Module):
     ----------
     stft_config : dict
         Configuration of hyperparameters for computing the STFT
+    sr : int
+        Sample rate
+    max_lag : float
+        Maximum lag / delay to allow in cross-correlation computation
+        Default value is 1ms (0.001s)
     rmse_weight : float
         Weight of signal-level loss in loss summation
     itd_weight : float
