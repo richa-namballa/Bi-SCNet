@@ -10,8 +10,9 @@
 #SBATCH --account=pr_230_general
 
 INPUT_DIR=/scratch/rn2214/source-separation/data/binaural_musdb18/test_mixtures
-OUTPUT_DIR=/scratch/rn2214/source-separation/binaural-mss/data/output/scnet_binaural/test
-CKPT_PATH=/scratch/rn2214/source-separation/SCNet/ckpt/binaural_checkpoint.th
+OUTPUT_DIR=/scratch/rn2214/source-separation/binaural-mss/data/output/scnet_binaural/test_spat_loss
+CKPT_PATH=/scratch/rn2214/source-separation/SCNet/ckpt/binaural_scnet_small_spat_loss/binaural_checkpoint_spat_loss.th
+CFG_PATH=/scratch/rn2214/source-separation/SCNet/conf/config_small.yaml
 
 ../sing << EOF
 
@@ -19,6 +20,7 @@ conda activate scnet
 
 python -m scnet.inference --input_dir $INPUT_DIR \
 			  --output_dir $OUTPUT_DIR \
-			  --checkpoint_path $CKPT_PATH
+			  --checkpoint_path $CKPT_PATH \
+			  --config_path $CFG_PATH
 
 EOF

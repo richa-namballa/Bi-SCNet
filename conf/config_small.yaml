@@ -49,7 +49,7 @@ optim:
   weight_decay: 0
 
 seed: 42
-save_every: 2000
+save_every: 1000
 
 augment:
   shift_same: false
