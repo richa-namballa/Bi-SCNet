@@ -59,7 +59,7 @@ def spec_rmse_loss(estimate, sources, stft_config):
     return loss
 
 
-def gcc_phat_cc(x1, x2, tau_max=None, eps=1e-6):
+def gcc_phat_cc(x1, x2, tau_max, eps=1e-6):
     """
     Computes the cross-correlation coefficients between two
     signals (left and right channels) using the GCC-PHAT
@@ -72,7 +72,7 @@ def gcc_phat_cc(x1, x2, tau_max=None, eps=1e-6):
     x2 : torch.Tensor
         Right channel (batch, nsrc, samples)
     tau_max : int
-        Maximum lag value
+        Maximum lag value in samples
     eps : float
         Epsilon to avoid zero division
 
@@ -105,7 +105,7 @@ def gcc_phat_cc(x1, x2, tau_max=None, eps=1e-6):
     return cc
 
 
-def itd_loss(pred, target):
+def itd_loss(pred, target, tau_max):
     """
     Computes the ITD loss as described by Hernandez-Olivan, et al. (2024).
 
@@ -126,8 +126,8 @@ def itd_loss(pred, target):
     
     # compute cross correlation using GCC-PHAT between left and
     # right channels of predicted and estimated signals
-    pred_cc = gcc_phat_cc(pred[..., 0,:], pred[..., 1,:])
-    target_cc = gcc_phat_cc(target[..., 0,:], target[..., 1,:])
+    pred_cc = gcc_phat_cc(pred[..., 0,:], pred[..., 1,:], tau_max)
+    target_cc = gcc_phat_cc(target[..., 0,:], target[..., 1,:], tau_max)
 
     # compute mse
     squared_error = (pred_cc - target_cc) ** 2
@@ -151,10 +151,11 @@ class BinauralLoss(nn.Module):
     itd_weight : float
         Weight of spatial loss in loss summation
     """
-    def __init__(self, stft_config, rmse_weight=1., itd_weight=1.):
+    def __init__(self, stft_config, sr=44100, max_lag=1e-3, rmse_weight=1, itd_weight=1e6):
         super(BinauralLoss, self).__init__()
 
         self.stft_config = stft_config
+        self.tau_max = int(max_lag * sr)
         self.rmse_weight = rmse_weight
         self.itd_weight = itd_weight
 
@@ -179,10 +180,10 @@ class BinauralLoss(nn.Module):
 
         if self.rmse_weight > 0:
             self.signal_loss = spec_rmse_loss(estimates, targets, self.stft_config)
-            loss += self.signal_loss
+            loss += self.rmse_weight * self.signal_loss
 
         if self.itd_weight > 0:
-            self.spatial_loss = itd_loss(estimates, targets)
-            loss += self.spatial_loss
+            self.spatial_loss = itd_loss(estimates, targets, self.tau_max)
+            loss += self.itd_weight * self.spatial_loss
 
         return loss
