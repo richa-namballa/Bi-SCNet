@@ -158,13 +158,15 @@ class BinauralLoss(nn.Module):
     itd_weight : float
         Weight of spatial loss in loss summation
     """
-    def __init__(self, stft_config, sr=44100, max_lag=1e-3, rmse_weight=1, itd_weight=0.1):
+    def __init__(self, stft_config, sr=44100, max_lag=1e-3,
+                 rmse_weight=1, itd_weight=1, dynamic_weights=True):
         super(BinauralLoss, self).__init__()
 
         self.stft_config = stft_config
         self.tau_max = int(max_lag * sr)
         self.rmse_weight = rmse_weight
         self.itd_weight = itd_weight
+        self.dyn = dynamic_weights
 
         # store separate loss values for logging
         self.signal_loss = 1e6
@@ -187,10 +189,18 @@ class BinauralLoss(nn.Module):
 
         if self.rmse_weight > 0:
             self.signal_loss = spec_rmse_loss(estimates, targets, self.stft_config)
-            loss += self.rmse_weight * self.signal_loss
+            
+            if self.dyn:
+                loss += self.signal_loss / self.signal_loss.detach()
+            else:
+                loss += self.rmse_weight * self.signal_loss
 
         if self.itd_weight > 0:
             self.spatial_loss = itd_loss(estimates, targets, self.tau_max)
-            loss += self.itd_weight * self.spatial_loss
+            
+            if self.dyn:
+                loss += self.spatial_loss / self.spatial_loss.detach()
+            else:
+                loss += self.itd_weight * self.spatial_loss
 
         return loss
