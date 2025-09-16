@@ -152,6 +152,8 @@ class Solver(object):
             formatted = self._format_train(metrics['train'])
             logger.info(
                 f'Train Summary | Epoch {epoch + 1} | {_summary(formatted)}')
+            logger.info(f'Signal Loss={metrics['train']['signal_loss']}')
+            logger.info(f'Spatial Loss={metrics['train']['spatial_loss']}')
             self.accelerator.log({'epoch': (epoch + 1),
                 'train_loss': metrics['train']['loss'],
                 'train_sig_loss': metrics['train']['signal_loss'],
@@ -189,6 +191,8 @@ class Solver(object):
             formatted = self._format_train(metrics['valid'])
             logger.info(
                 f'Valid Summary | Epoch {epoch + 1} | {_summary(formatted)}')
+            logger.info(f'Signal Loss={metrics['valid']['signal_loss']}')
+            logger.info(f'Spatial Loss={metrics['valid']['spatial_loss']}')
             self.accelerator.log({'valid_loss': metrics['valid']['loss'],
                 'valid_sig_loss': metrics['valid']['signal_loss'],
                 'valid_spat_loss': metrics['valid']['spatial_loss'],
