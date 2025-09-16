@@ -290,4 +290,8 @@ class Solver(object):
         if train:
             for ema in self.emas['epoch']:
                 ema.update()
+
+        # clear stft cache
+        torch.backends.cuda.cufft_plan_cache.clear()
+
         return losses
