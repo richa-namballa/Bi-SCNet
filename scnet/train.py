@@ -65,22 +65,22 @@ def get_solver(args):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--save_path", type=str, default='./result/', help="path to config file")
-    parser.add_argument("--config_path", type=str, default='./conf/config.yaml', help="path to save checkpoint")
+    parser.add_argument("--save_path", type=str, default='./result/', help="path to save checkpoint")
+    parser.add_argument("--config_path", type=str, default='./conf/config.yaml', help="path to config file")
     args = parser.parse_args()
 
     if not os.path.exists(args.save_path):
         os.makedirs(args.save_path)
 
     if not os.path.isfile(args.config_path):
-        print(f"Error: config file {args.config_path} does not exist.")
+        logger.error(f"Error: config file {args.config_path} does not exist.")
         sys.exit(1)
         
     solver = get_solver(args)
     accelerator.wait_for_everyone()
+    logger.info("Beginning training process...")
     solver.train()
-
-
+    logger.info("Training completed!")
 
 if __name__ == "__main__":
     main()

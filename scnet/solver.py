@@ -1,4 +1,5 @@
 import torch
+import os
 from pathlib import Path
 from .utils import copy_state, EMA, new_sdr
 from .apply import apply_model
@@ -9,6 +10,7 @@ from tqdm import tqdm
 from .log import logger
 from accelerate import Accelerator
 from torch.cuda.amp import GradScaler, autocast
+import wandb
 
 def _summary(metrics):
     return " | ".join(f"{key.capitalize()}={val}" for key, val in metrics.items())
@@ -21,8 +23,19 @@ class Solver(object):
         self.model = model
         self.optimizer = optimizer
         self.device = next(iter(self.model.parameters())).device
-        self.accelerator = Accelerator()
+        self.accelerator = Accelerator(log_with="wandb")
         self.scaler = GradScaler()
+
+        wandb.login(key=os.environ['WANDB_API_KEY'])
+        self.accelerator.init_trackers(
+            project_name="scnet",
+            config=self.config.to_dict(),
+            init_kwargs={
+                "wandb": {
+                    "entity": os.environ['WANDB_ENTITY']
+                }
+            }
+            )
 
         self.stft_config = {
             'n_fft': config.model.nfft,
@@ -88,6 +101,8 @@ class Solver(object):
             for kind, emas in self.emas.items():
                 for k, ema in enumerate(emas):
                     ema.load_state_dict(package[f'ema_{kind}_{k}'])
+            logger.info(f'Model checkpoint loaded successfully.')
+            logger.info(f'Resuming training from epoch {self.epoch + 1}...')
 
     def _format_train(self, metrics: dict) -> dict:
         """Formatting for train/valid metrics."""
@@ -135,7 +150,10 @@ class Solver(object):
             formatted = self._format_train(metrics['train'])
             logger.info(
                 f'Train Summary | Epoch {epoch + 1} | {_summary(formatted)}')
+            self.accelerator.log({'epoch': (epoch + 1), 'train_loss': metrics['train']['loss']}, step=(epoch + 1))
 
+            if 'nsdr' in metrics['train']:
+                self.accelerator.log({'train_nsdr': metrics['train']['nsdr']}, step=(epoch + 1))
 
             # Cross validation
             logger.info('-' * 70)
@@ -163,11 +181,11 @@ class Solver(object):
                     metrics['valid'].update(bvalid)
                     metrics['valid']['bname'] = bname
 
-
-
             formatted = self._format_train(metrics['valid'])
             logger.info(
                 f'Valid Summary | Epoch {epoch + 1} | {_summary(formatted)}')
+            self.accelerator.log({'valid_loss': metrics['valid']['loss'],
+                         'valid_nsdr': metrics['valid']['nsdr']}, step=(epoch + 1))
             
             valid_nsdr = metrics['valid']['nsdr']
             # Save the best model
@@ -176,10 +194,14 @@ class Solver(object):
               self.best_state = copy_state(state)
               self.best_nsdr = valid_nsdr
 
+            self.accelerator.log({'best_nsdr': self.best_nsdr}, step=(epoch + 1))
+
             if self.accelerator.is_main_process:
                 self._serialize(epoch)
             if epoch == self.config.epochs - 1:
                 break
+
+        self.accelerator.end_training()
 
 
     def _run_one_epoch(self, epoch, train=True):
