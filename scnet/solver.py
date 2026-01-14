@@ -1,4 +1,5 @@
 import torch
+import os
 from pathlib import Path
 from .utils import copy_state, EMA, new_sdr
 from .apply import apply_model
@@ -25,13 +26,13 @@ class Solver(object):
         self.accelerator = Accelerator(log_with="wandb")
         self.scaler = GradScaler()
 
-        wandb.login(key='c851d125983139309cd4df22589328207064e02a')
+        wandb.login(key=os.environ['WANDB_API_KEY'])
         self.accelerator.init_trackers(
             project_name="scnet",
             config=self.config.to_dict(),
             init_kwargs={
                 "wandb": {
-                    "entity": "richanamballa-new-york-university"
+                    "entity": os.environ['WANDB_ENTITY']
                 }
             }
             )
