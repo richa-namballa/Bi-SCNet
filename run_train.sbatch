@@ -10,7 +10,7 @@
 #SBATCH --account=pr_230_general
 
 CONFIG_PATH=/scratch/rn2214/source-separation/SCNet/conf/config_small.yaml
-SAVE_PATH=/scratch/rn2214/source-separation/SCNet/ckpt/binaural_scnet_small/
+SAVE_PATH=/scratch/rn2214/source-separation/SCNet/ckpt/binaural_scnet_small_spat_loss
 
 ../sing << EOF
 

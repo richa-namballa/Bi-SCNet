@@ -5,7 +5,7 @@ from .utils import copy_state, EMA, new_sdr
 from .apply import apply_model
 from .ema import ModelEMA
 from . import augment
-from .loss import spec_rmse_loss
+from .loss import BinauralLoss
 from tqdm import tqdm
 from .log import logger
 from accelerate import Accelerator
@@ -132,6 +132,9 @@ class Solver(object):
         return losses
 
     def train(self):
+        # Initialize custom binaural loss
+        self.binaural_loss = BinauralLoss(self.stft_config)
+
         # Optimizing the model
         for epoch in range(self.epoch + 1, self.config.epochs):
             #Adjust learning rate
@@ -150,7 +153,12 @@ class Solver(object):
             formatted = self._format_train(metrics['train'])
             logger.info(
                 f'Train Summary | Epoch {epoch + 1} | {_summary(formatted)}')
-            self.accelerator.log({'epoch': (epoch + 1), 'train_loss': metrics['train']['loss']}, step=(epoch + 1))
+            logger.info(f"Signal Loss={metrics['train']['signal_loss']}")
+            logger.info(f"Spatial Loss={metrics['train']['spatial_loss']}")
+            self.accelerator.log({'epoch': (epoch + 1),
+                'train_loss': metrics['train']['loss'],
+                'train_sig_loss': metrics['train']['signal_loss'],
+                'train_spat_loss': metrics['train']['spatial_loss']}, step=(epoch + 1))
 
             if 'nsdr' in metrics['train']:
                 self.accelerator.log({'train_nsdr': metrics['train']['nsdr']}, step=(epoch + 1))
@@ -184,8 +192,12 @@ class Solver(object):
             formatted = self._format_train(metrics['valid'])
             logger.info(
                 f'Valid Summary | Epoch {epoch + 1} | {_summary(formatted)}')
+            logger.info(f"Signal Loss={metrics['valid']['signal_loss']}")
+            logger.info(f"Spatial Loss={metrics['valid']['spatial_loss']}")
             self.accelerator.log({'valid_loss': metrics['valid']['loss'],
-                         'valid_nsdr': metrics['valid']['nsdr']}, step=(epoch + 1))
+                'valid_sig_loss': metrics['valid']['signal_loss'],
+                'valid_spat_loss': metrics['valid']['spatial_loss'],
+                'valid_nsdr': metrics['valid']['nsdr']}, step=(epoch + 1))
             
             valid_nsdr = metrics['valid']['nsdr']
             # Save the best model
@@ -235,11 +247,14 @@ class Solver(object):
 
             assert estimate.shape == sources.shape, (estimate.shape, sources.shape)
 
-            loss = spec_rmse_loss(estimate, sources, self.stft_config)
+            loss = self.binaural_loss(estimate, sources)
 
             losses = {}
 
             losses['loss'] = loss
+            losses['signal_loss'] = self.binaural_loss.signal_loss
+            losses['spatial_loss'] = self.binaural_loss.spatial_loss
+
             if not train:
                 nsdrs = new_sdr(sources, estimate.detach()).mean(0)
                 nsdrs = self.accelerator.reduce(nsdrs, reduction="mean")
@@ -276,4 +291,8 @@ class Solver(object):
         if train:
             for ema in self.emas['epoch']:
                 ema.update()
+
+        # clear stft cache
+        torch.backends.cuda.cufft_plan_cache.clear()
+
         return losses
