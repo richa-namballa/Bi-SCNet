@@ -1,8 +1,19 @@
-# SCNet
+# Bi-SCNet
 
-This repository is the official implementation of [SCNet: Sparse Compression Network for Music Source Separation](https://arxiv.org/abs/2401.13276)
+**Binaural Sparse Compression Network for Music Source Separation**
 
-![architecture](images/SCNet.png)
+This repository is an adaptation of the [SCNet: Sparse Compression Network for Music Source Separation](https://github.com/starrytong/SCNet) repository by Tong, et al. (2024):
+
+```bibtex
+@inproceedings{tong2024scnet,
+  title={SCnet: Sparse compression network for music source separation},
+  author={Tong, Weinan and Zhu, Jiaxu and Chen, Jun and Kang, Shiyin and Jiang, Tao and Li, Yang and Wu, Zhiyong and Meng, Helen},
+  booktitle={2024 IEEE International Conference on Acoustics, Speech and Signal Processing (ICASSP)},
+  pages={1276--1280},
+  year={2024},
+  organization={IEEE}
+}
+```
 
 ---
 
@@ -11,7 +22,6 @@ This repository is the official implementation of [SCNet: Sparse Compression Net
 First, you need to install the requirements.
 
 ```bash
-cd SCNet-main
 pip install -r requirements.txt
 ```
 
