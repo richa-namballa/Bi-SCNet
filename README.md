@@ -6,9 +6,11 @@ This repository is an adaptation of the [SCNet: Sparse Compression Network for M
 
 ```bibtex
 @inproceedings{tong2024scnet,
-  title={SCnet: Sparse compression network for music source separation},
-  author={Tong, Weinan and Zhu, Jiaxu and Chen, Jun and Kang, Shiyin and Jiang, Tao and Li, Yang and Wu, Zhiyong and Meng, Helen},
-  booktitle={2024 IEEE International Conference on Acoustics, Speech and Signal Processing (ICASSP)},
+  title={SCNet: Sparse Compression Network for Music Source Separation},
+  author={Tong, Weinan and Zhu, Jiaxu and Chen, Jun and Kang, Shiyin and
+  Jiang, Tao and Li, Yang and Wu, Zhiyong and Meng, Helen},
+  booktitle={2024 IEEE International Conference on Acoustics,
+  Speech and Signal Processing (ICASSP)},
   pages={1276--1280},
   year={2024},
   organization={IEEE}
@@ -17,7 +19,7 @@ This repository is an adaptation of the [SCNet: Sparse Compression Network for M
 
 ---
 
-## Installing
+## Set-Up
 
 First, you need to install the requirements.
 
