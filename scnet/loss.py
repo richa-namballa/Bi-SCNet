@@ -108,6 +108,7 @@ def gcc_phat_cc(x1, x2, tau_max, eps=1e-6):
 def itd_loss(pred, target, tau_max):
     """
     Computes the ITD loss as described by Hernandez-Olivan, et al. (2024).
+    See https://ieeexplore.ieee.org/abstract/document/10694612
 
     Parameters
     ----------
