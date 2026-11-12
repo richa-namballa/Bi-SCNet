@@ -5,7 +5,7 @@
 See: [Spacing Out: On the Reliability of Binaural Music Source Separation Metrics](https://github.com/richa-namballa/binaural-mss/)
 
 **Contributions:**
-* [Spatial Loss](https://github.com/richa-namballa/Bi-SCNet/blob/d75678e19f969bd4a1c981f794724d4aefb6ef86/scnet/loss.py#L142) based on ["Interaural Time Difference Loss for Binaural Target Sound Extraction"](https://ieeexplore.ieee.org/abstract/document/10694612) by Hernandez-Olivan et al.
+* [Spatial Loss](https://github.com/richa-namballa/Bi-SCNet/blob/d75678e19f969bd4a1c981f794724d4aefb6ef86/scnet/loss.py#L142) based on ["Interaural Time Difference Loss for Binaural Target Sound Extraction"](https://ieeexplore.ieee.org/abstract/document/10694612) by Hernandez-Olivan et al. (2024)
 * Weights and Biases Logging
 
 This repository is an adaptation of the [SCNet: Sparse Compression Network for Music Source Separation](https://github.com/starrytong/SCNet) repository by Tong, et al. (2024):
