@@ -1,3 +1,6 @@
+---
+license: mit
+---
 # Bi-SCNet
 
 **Binaural Sparse Compression Network for Music Source Separation**
