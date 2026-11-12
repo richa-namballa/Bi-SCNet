@@ -1,6 +1,3 @@
----
-license: mit
----
 # Bi-SCNet
 
 **Binaural Sparse Compression Network for Music Source Separation**
@@ -65,6 +62,10 @@ accelerate launch -m scnet.train \
 
 ## Inference
 
+**Binaural Model Checkpoint**
+
+The binaural model (Bi-SCNet) checkpoints are available [here](https://huggingface.co/richa-namballa/Bi-SCNet) on Hugging Face.
+Both model versions use the same configuration file in `conf/`.
 
 **Stereo Model Checkpoint**
 
@@ -73,9 +74,6 @@ The stereo model checkpoint was trained on the MUSDB dataset by the original aut
 [Download Stereo Model Checkpoint](https://drive.google.com/file/d/1CdEIIqsoRfHn1SJ7rccPfyYioW3BlXcW/view?usp=sharing)
 
 They have performed normalization on the model's input during training, which helps in stabilizing the training process (no code modifications are needed during inference).
-
-**Binaural Model Checkpoint**
-
 
 **Running Inference**
 
