@@ -1,7 +1,7 @@
 name: 'binaural_scnet_small'
 
 data:
-  wav: /scratch/rn2214/source-separation/data/binaural_musdb18/split
+  wav: /data/binaural_musdb18/split
   samplerate: 44100
   segment: 11
   shift: 1
