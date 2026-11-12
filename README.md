@@ -5,7 +5,7 @@
 See: [Spacing Out: On the Reliability of Binaural Music Source Separation Metrics](https://github.com/richa-namballa/binaural-mss/)
 
 **Contributions:**
-* [Spatial Loss](https://github.com/richa-namballa/Bi-SCNet/blob/d75678e19f969bd4a1c981f794724d4aefb6ef86/scnet/loss.py#L142)
+* [Spatial Loss](https://github.com/richa-namballa/Bi-SCNet/blob/d75678e19f969bd4a1c981f794724d4aefb6ef86/scnet/loss.py#L142) based on ["Interaural Time Difference Loss for Binaural Target Sound Extraction"](https://ieeexplore.ieee.org/abstract/document/10694612) by Hernandez-Olivan et al.
 * Weights and Biases Logging
 
 This repository is an adaptation of the [SCNet: Sparse Compression Network for Music Source Separation](https://github.com/starrytong/SCNet) repository by Tong, et al. (2024):
@@ -65,11 +65,11 @@ accelerate launch -m scnet.train \
 
 **Stereo Model Checkpoint**
 
-The stereo model checkpoint was trained on the MUSDB dataset by the original authors of SCNet. You can download it from the following link:
+The stereo model checkpoint was trained on the MUSDB dataset by the original authors of SCNet. You can download their checkpoint from the following link:
 
 [Download Stereo Model Checkpoint](https://drive.google.com/file/d/1CdEIIqsoRfHn1SJ7rccPfyYioW3BlXcW/view?usp=sharing)
 
-The  have performed normalization on the model's input during training, which helps in stabilizing the training process (no code modifications are needed during inference).
+They have performed normalization on the model's input during training, which helps in stabilizing the training process (no code modifications are needed during inference).
 
 **Binaural Model Checkpoint**
 
