@@ -1,6 +1,6 @@
 # Bi-SCNet
 
-[![arXiv](https://img.shields.io/badge/arXiv-2401.12345-b31b1b.svg)](https://arxiv.org/abs/2607.25919) [![Hugging Face](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Bi--SCNet-yellow)](https://huggingface.co/richa-namballa/Bi-SCNet)
+[![arXiv](https://img.shields.io/badge/arXiv-2607.25919-b31b1b.svg)](https://arxiv.org/abs/2607.25919) [![Hugging Face](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Bi--SCNet-yellow)](https://huggingface.co/richa-namballa/Bi-SCNet)
 
 **Binaural Sparse Compression Network for Music Source Separation**
 
