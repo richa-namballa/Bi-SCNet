@@ -64,16 +64,14 @@ accelerate launch -m scnet.train \
 
 **Binaural Model Checkpoint**
 
-The binaural model (Bi-SCNet) checkpoints are available [here](https://huggingface.co/richa-namballa/Bi-SCNet) on Hugging Face.
+The binaural model (Bi-SCNet) checkpoints are available on Hugging Face.
 Both model versions use the same configuration file in `conf/`.
+
+[Download Binaural Model Checkpoints](https://huggingface.co/richa-namballa/Bi-SCNet) 
 
 **Stereo Model Checkpoint**
 
-The stereo model checkpoint was trained on the MUSDB dataset by the original authors of SCNet. You can download their checkpoint from the following link:
-
-[Download Stereo Model Checkpoint](https://drive.google.com/file/d/1CdEIIqsoRfHn1SJ7rccPfyYioW3BlXcW/view?usp=sharing)
-
-They have performed normalization on the model's input during training, which helps in stabilizing the training process (no code modifications are needed during inference).
+The stereo model checkpoint was trained on the MUSDB dataset by the original authors of SCNet. You can download their checkpoint from their repository [here](https://github.com/starrytong/SCNet#inference).
 
 **Running Inference**
 
